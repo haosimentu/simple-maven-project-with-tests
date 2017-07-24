@@ -9,5 +9,9 @@ class Base {
         double r = Math.random();
         System.out.println(r);
     }
+    
+    public static void main(String[] args){
+        System.out.println(new Base().run());
+    }
 
 }
