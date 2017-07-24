@@ -1,9 +1,12 @@
-stage 'build'
 node {
-     git 'https://github.com/ciandcd/simple-maven-project-with-tests.git'
+     stage 'Checkout'
+     git([url: 'https://github.com/ciandcd/simple-maven-project-with-tests.git', branch: 'master'])
+     
+     stage 'Build'
      withEnv(["PATH+MAVEN=${tool 'm3'}/bin"]) {
-          
-          sh "mvn clean package -Dmaven.test.skip=true"
+          sh "mvn clean package"
      }
-     stash excludes: 'target/', includes: '**', name: 'source'
+
+     stage 'Test'
+     junit 'target/surefire-reports/**/*.xml'
 }
