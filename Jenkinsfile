@@ -2,7 +2,7 @@ stage 'build'
 node {
      git 'https://github.com/ciandcd/simple-maven-project-with-tests.git'
      withEnv(["PATH+MAVEN=${tool 'Maven3'}/bin"]) {
-          sh "mvn -B –Dmaven.test.failure.ignore=true clean package -dmaven.test.skip=true"
+          sh "mvn clean package -Dmaven.test.skip=true"
      }
      stash excludes: 'target/', includes: '**', name: 'source'
 }
