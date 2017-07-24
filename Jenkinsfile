@@ -1,6 +1,6 @@
 node {
      stage 'Checkout'
-     git([url: 'https://github.com/ciandcd/simple-maven-project-with-tests.git'])
+     git([url: 'https://github.com/haosimentu/simple-maven-project-with-tests.git',branch: 'master'])
      
      stage 'Build'
      withEnv(["PATH+MAVEN=${tool 'm3'}/bin"]) {
