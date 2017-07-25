@@ -10,5 +10,6 @@ node {
      stage 'Test'
      junit 'target/surefire-reports/**/*.xml'
      
-     
+     stage 'Image'
+     docker.build("mytest/docker-jenkins-pipeline-test:${env.BUILD_NUMBER}")
 }
