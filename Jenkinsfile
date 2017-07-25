@@ -25,7 +25,7 @@ node
 	 
 	stage('build Image')
 	{
-	 	container = docker.build("${registry_host_port}/mytest/docker-jenkins-pipeline-test:${env.BUILD_NUMBER}",'ttttt')
+	 	container = docker.build("${registry_host_port}/mytest/docker-jenkins-pipeline-test:${env.BUILD_NUMBER}",'.')
 	}
 	
 	stage('Pushing image to registry')
