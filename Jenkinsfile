@@ -6,7 +6,7 @@ node {
    stage('Code Analysis') {
    	   withEnv(["PATH+MAVEN=${tool 'm3'}/bin"]) {
 	      sh "mvn clean"
-          sh "infer -- mvn compile"
+          // sh "infer -- mvn compile"
 	   }
    }
    stage('Testing') {
