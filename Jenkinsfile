@@ -4,15 +4,24 @@ node {
       git 'https://github.com/trautonen/coveralls-maven-plugin.git/'
    }
    stage('Code Analysis') {
-       sh "mvn clean"
-       sh "infer -- mvn compile"
+   	   withEnv(["PATH+MAVEN=${tool 'm3'}/bin"]) {
+	      sh "mvn clean"
+          sh "infer -- mvn compile"
+	   }
    }
    stage('Testing') {
-       sh "mvn test"
+       withEnv(["PATH+MAVEN=${tool 'm3'}/bin"]) {
+          sh "mvn test"
+       }
+       
        junit 'target/surefire-reports/TEST-*.xml'
    }
+   
    stage('Package') {
-       sh "'mvn' -Dmaven.test.skip=true package"
+       withEnv(["PATH+MAVEN=${tool 'm3'}/bin"]) {
+          sh "mvn -Dmaven.test.skip=true package"
+       }
+       
        archive 'target/*.jar'
    }
    stage('Deploy') {
