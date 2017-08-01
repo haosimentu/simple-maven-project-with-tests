@@ -32,17 +32,6 @@ node
  	{
  		container.push()
  	}
-	 	
-	stage('approve')
-	{
-		timeout(time: 5, unit: 'MINUTES') {
-		     input message: 'Do you want to deploy?', submitter: 'ops'
-		}
-	}
-	
-	post { 
-	    always { 
-	        echo 'I will always say Hello again!'
-	    }
-	}
+ 	
+ 	
 }
