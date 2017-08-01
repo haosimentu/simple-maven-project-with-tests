@@ -1,4 +1,4 @@
-node 
+node('jnlp-slave') 
 {
 	// Setup the Docker Registry (Docker Hub) + Credentials 
 	registry_url = "https://index.docker.io/v1/" // Docker Hub
@@ -23,15 +23,7 @@ node
 	 	junit 'target/surefire-reports/**/*.xml'
 	}
 	 
-	stage('build Image')
-	{
-	 	container = docker.build("${registry_host_port}/mytest/docker-jenkins-pipeline-test:${env.BUILD_NUMBER}",'.')
-	}
 	
-	stage('Pushing image to registry')
- 	{
- 		container.push()
- 	}
  	
  	
 }
