@@ -27,4 +27,36 @@ node {
    stage('Deploy') {
        echo 'pipeline success'
    }
+   
+   //QA click the promotion star and simply click "approve" on it
+	stage('approve')
+	{
+		timeout(time: 5, unit: 'MINUTES') {
+		     input message: 'Do you want to deploy?', submitter: 'ops'
+		}
+	}
+	
+	stage('Deploy service') {
+        sh 'kubectl -s http://192.168.17.137:8080 create -f https://raw.githubusercontent.com/haosimentu/simple-maven-project-with-tests/master/service.yml'
+    }
+    
+    stage('Deploy deployment') {
+        sh 'kubectl -s http://192.168.17.137:8080 create -f https://raw.githubusercontent.com/haosimentu/simple-maven-project-with-tests/master/deploy.yml'
+    }
+    
+	post { 
+	    always { 
+	        echo 'I will always say Hello again!'
+	    }
+	}
+	
+	stage('build Image')
+	{
+	 	container = docker.build("${registry_host_port}/mytest/docker-jenkins-pipeline-test:${env.BUILD_NUMBER}",'.')
+	}
+	
+	stage('Pushing image to registry')
+ 	{
+ 		container.push()
+ 	}
 }

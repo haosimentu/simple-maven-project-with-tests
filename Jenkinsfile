@@ -1,3 +1,5 @@
+
+
 node('jnlp-slave') 
 {
 	// Setup the Docker Registry (Docker Hub) + Credentials 
