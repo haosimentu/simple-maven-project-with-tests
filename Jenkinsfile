@@ -1,6 +1,6 @@
 
 
-node('jnlp-slave') 
+node() 
 {
 	// Setup the Docker Registry (Docker Hub) + Credentials 
 	registry_url = "https://index.docker.io/v1/" // Docker Hub
@@ -17,6 +17,13 @@ node('jnlp-slave')
 	{
 	     withEnv(["PATH+MAVEN=${tool 'm3'}/bin"]) {
 	          sh "mvn clean package"
+	     }
+	}
+	
+	stage('checkstyle')
+	{
+	     withEnv(["PATH+MAVEN=${tool 'm3'}/bin"]) {
+	          sh "mvn checkstyle:checkstyle"
 	     }
 	}
 	 
