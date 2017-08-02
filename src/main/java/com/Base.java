@@ -1,4 +1,4 @@
-package test;
+package com;
 
 import static org.junit.Assert.*;
 import org.junit.internal.AssumptionViolatedException;

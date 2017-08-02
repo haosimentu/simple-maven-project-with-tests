@@ -2,6 +2,8 @@ package test;
 
 import org.junit.Test;
 
+import com.Base;
+
 public class SomeTest extends Base {
 
     @Test public void test1() {

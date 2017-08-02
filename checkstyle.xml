@@ -8,7 +8,7 @@
 	<!-- Checks for Size Violations. -->
 	<!-- 检查文件的长度（行） default max=2000 -->
 	<module name="FileLength">
-		<property name="max" value="2500" />
+		<property name="max" value="100" />
 	</module>
 
 	<module name="TreeWalker">
