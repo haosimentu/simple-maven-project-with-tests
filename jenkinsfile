@@ -1,0 +1,50 @@
+podTemplate(cloud: "kubernetes", label: "label-${env.JOB_NAME}_${env.BUILD_NUMBER}", containers: [
+  containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave:3.10-1-alpine', args: '${computer.jnlpmac} ${computer.name}'),
+  containerTemplate(name: 'maven', image: 'maven:3.5.0-jdk-8-alpine', ttyEnabled: true, command: 'cat'),
+  containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat',envVars: [containerEnvVar(key: 'DOCKER_CONFIG', value: '/tmp/'),])
+  ],
+  volumes: [
+      hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
+      hostPathVolume(hostPath: '/root/.m2/repository', mountPath: '/root/.m2/repository'),
+      hostPathVolume(hostPath: '/var/run/secrets/kubernetes.io/serviceaccount', mountPath: '/var/run/secrets/kubernetes.io/serviceaccount')
+  ]
+){
+  node("label-${env.JOB_NAME}_${env.BUILD_NUMBER}") {
+      
+      git url:'https://github.com/haosimentu/simple-maven-project-with-tests.git', branch: 'master'
+
+      container('maven') {
+          stage('Build a Maven project') {
+              sh "mvn  -Dmaven.test.failure.ignore clean compile package"
+              sh "mvn checkstyle:checkstyle findbugs:findbugs pmd:pmd"
+              junit "**/target/surefire-reports/**/*.xml"
+              //step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/*.xml'])
+          }
+      }
+      
+      stage('publish and archive') {
+          step([$class: "hudson.plugins.checkstyle.CheckStylePublisher", pattern: "**/target/checkstyle-result.xml", unstableTotalAll:"0"])
+	      step([$class: "PmdPublisher", pattern: "**/target/pmd.xml", unstableTotalAll:"0"])
+	      step([$class: "FindBugsPublisher", pattern: "**/findbugsXml.xml", unstableTotalAll:"0"])
+	      
+	      step([$class: "ArtifactArchiver", artifacts: "target/*.jar", fingerprint: true])
+      }
+      
+
+      container("docker"){
+        stage('Docker Build & Push') {
+            sh "docker -v"
+            sh ("docker build -t 192.168.17.140:5000/docker-jenkins-pipeline-test:${env.BUILD_NUMBER} .")
+            sh ("docker push 192.168.17.140:5000/docker-jenkins-pipeline-test:${env.BUILD_NUMBER}")
+        }
+      }
+      
+      stage('email') {
+          emailext body: '''Project: $PROJECT_NAME  Build Number: # $BUILD_NUMBER Build Status: $BUILD_STATUS Check console output at $BUILD_URL to view the results.''', 
+          recipientProviders: [[$class: 'DevelopersRecipientProvider']], 
+          subject: '$BUILD_STATUS - $PROJECT_NAME - Build # $BUILD_NUMBER', 
+          to: 'wangguangming@migu.com'
+          
+      }
+    }
+}
