@@ -1,0 +1,9 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<hudson.plugins.scm__sync__configuration.ScmSyncConfigurationPlugin version="1">
+  <scm class="hudson.plugins.scm_sync_configuration.scms.ScmSyncGitSCM"/>
+  <scmRepositoryUrl>scm:git:https://haosimentu%40126.com:Wgm521789@github.com/haosimentu/simple-maven-project-with-tests.git</scmRepositoryUrl>
+  <noUserCommitMessage>false</noUserCommitMessage>
+  <displayStatus>true</displayStatus>
+  <commitMessagePattern>[message]</commitMessagePattern>
+  <manualSynchronizationIncludes/>
+</hudson.plugins.scm__sync__configuration.ScmSyncConfigurationPlugin>
